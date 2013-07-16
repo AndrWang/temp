@@ -5,7 +5,7 @@
 # Python 概述
 1. Python 使用强制缩进的编码风格,并以此组织代码块
 2. Python 语句结尾不用分号
-3. Python 标明注释用#(单行)或三引号(多行)
+3. Python 标明注释用#(单行)或三引号(多行)(注:三引号实际上是定义字符串的,再此起到注释作用)
 4. Python 语言没有入口方法(main),代码会从头到尾顺序执行
 5. Python 用 import 引用所需要的模块
 
@@ -82,7 +82,7 @@ const._ConstTypeError: Can't rebind const magic
 ### 空类型
 
 空类型(None)表示该值是一个空对象,比如没有明确定义返回值的函数就是返回None。
-空类型没有任何属性,经常被用做函数中可选参数的默认值。None 的布尔值为假。
+空类型没有任何属性,经常被用做函数中可选参数的默认值. None的布尔值为假。
 
 #### 布尔类型
 
@@ -91,7 +91,7 @@ Python 中用 True 和 False 来定义真假
 
 #### 数值类型
 
-Python 拥有四种数值类型: 整型(int)、长整型(long)、浮点类型(float)以及复数类型(complex)。
+Python拥有四种数值类型: 整型(int)、长整型(long)、浮点类型(float)以及复数类型(complex)。
 这些类型是不可变的，就是说整数对象一旦创建，其值便不可更改.  
 相反，系统将创建新的简单类型对象并将其赋值给变量。通过 Python id 函数，可以查看基本 PyObject 标识的变更方式,另外str类型同样是不可变的。
 
@@ -106,7 +106,9 @@ Python 拥有四种数值类型: 整型(int)、长整型(long)、浮点类型(fl
 
 #### 列表(list)
 
-Python包含6种内建的序列：列表，元组，字符串，Unicode字符串，buffer对象和xrange对象。
+Python包含7种内建的序列：列表，元组，字符串，Unicode字符串，bytearrays, buffer对象和xrange对象.
+
+(There are seven sequence types: strings, Unicode strings, lists, tuples, bytearrays, buffers, and xrange objects.)
 
 列表和元组的主要区别在于：列表可以修改，元组则不能
 
@@ -173,8 +175,6 @@ TypeError: can only concatenate list (not "str") to list
 * 乘法
 
 <pre class=brush:python>
->>> print '=' * 5
-pythonpythonpythonpythonpython
 >>> print 'x' * 10
 xxxxxxxxxx
 >>> [1,2,3] * 3
@@ -265,7 +265,8 @@ remove(x) 删除表匹配对象 x 的第一个元素,无匹配时异常
 
 reverse() 颠倒列表元素的顺序  
 
-sort() 对列表排序  
+sort() 对列表排序 
+
 
 
 上面append， extend， insert， remove，reverse，sort都是直接修改原来的列表，而不是返回一个新的列表
@@ -380,6 +381,116 @@ key 是带一个参数的函数, 用来为每个元素提取比较值. 默认为
 [7, 6, 5, 4, 1]
 </pre>
 
+* 把列表当作堆栈使用
+
+利用列表的常用函数可以很方便的实现堆栈(后进先出)的效果.
+
+<pre class=brush:python> 
+>>> stack = [3, 4, 5]
+>>> stack.append(6)
+>>> stack.append(7)
+>>> stack
+[3, 4, 5, 6, 7]
+>>> stack.pop()
+7
+>>> stack
+[3, 4, 5, 6]
+>>> stack.pop()
+6
+>>> stack.pop()
+5
+>>> stack
+[3, 4]
+</pre>
+
+* 把列表当作队列使用
+
+虽然列表可以当作队列(先进先出)使用,但是这样用效率不高。相对来说从列表末尾添加和弹出很快；在头部插入和弹出很慢（因为，为了一个元素，要移动整个列表中的所有元素）。
+
+如果要实现队列,可以使用 collections.deque，它为在首尾两端快速插入和删除而设计。
+
+<pre>
+>>> from collections import deque
+>>> queue = deque(["Eric", "John", "Michael"])
+>>> queue.append("Terry")           # Terry arrives
+>>> queue.append("Graham")          # Graham arrives
+>>> queue.popleft()                 # The first to arrive now leaves
+'Eric'
+>>> queue.popleft()                 # The second to arrive now leaves
+'John'
+>>> queue                           # Remaining queue in order of arrival
+deque(['Michael', 'Terry', 'Graham'])
+</pre>
+
+* 函数式编程工具
+
+对于列表来讲, 有三个内置函数 filter(), map(), 和 reduce() 。
+
+filter(function, sequence) 返回一个sequence（序列），包括了给定序列中所有调用 function(item) 后返回值为true的元素。如果该 序列 （sequence）是一个 string（字符串）或者 tuple（元组），返回值必定是同一类型，否则，它总是list 
+
+<pre  class=brush:python>
+# 求不能被2和3整除的序列
+>>> def f(x): return x % 2 != 0 and x % 3 != 0
+>>> filter(f, range(2, 25))
+[5, 7, 11, 13, 17, 19, 23]
+>>> filter(None,range(1, 6))
+[1, 2, 3, 4, 5]
+
+>>> range(5)
+[0, 1, 2, 3, 4]
+# 注意0并没有被返回
+>>> filter(None, range(5))
+[1, 2, 3, 4]
+
+</pre>
+
+map(function, sequence)为每一个元素依次调用 function(item) 并返回一个所有返回值的列表.
+
+<pre  class=brush:python>
+>>> def cube(x): return x*x*x
+...
+>>> map(cube, range(1, 11))
+[1, 8, 27, 64, 125, 216, 343, 512, 729, 1000]
+</pre>
+
+可以传入多个序列，函数也必须要有对应数量的参数，执行时会依次用各序列上对应的元素来调用函数（如果某些序列比其它的短，就用 None 来代替）。如果把 None 做为一个函数传入，则直接返回参数做为替代。
+
+<pre  class=brush:python>
+>>> seq = range(8)
+>>> def add(x, y): return x+y
+>>> map(add, seq, seq)
+[0, 2, 4, 6, 8, 10, 12, 14]
+>>> map(None, seq, seq)
+[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7)]
+</pre>
+
+reduce(func, sequence) 返回一个单值，它是这样构造的：首先以序列的前两个元素调用函数 function ，再以返回值和第三个参数调用，依次执行下去。
+
+<pre  class=brush:python>
+
+>>> def add(x,y): return x+y
+# 计算1加到10的和
+>>> reduce(add, range(1, 11))
+55
+</pre>
+
+如果序列中只有一个元素，就返回它，如果序列是空的，就抛出一个异常。
+
+可以传入第三个参数做为初始值。如果序列是空的，就返回初始值，否则函数会先接收初始值和序列的第一个元素，然后是返回值和下一个元素，依此类推。
+
+<pre  class=brush:python>
+
+>>> reduce(add,[2])
+2
+>>> reduce(add,[])
+Traceback (most recent call last):
+  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+TypeError: reduce() of empty sequence with no initial value
+>>> reduce(add, range(1,11),9)
+64
+>>> reduce(add, [],9)
+9
+</pre>
 #### 元组(tuple)
 
 元组除了创建和访问元组元素之外，没有什么其他的操作
@@ -559,7 +670,7 @@ from string import Template
  'istitle',
  'isupper',
  'join',
- 'ljust',       # 左对齐
+ 'ljust',       # 按照指定的长度左对齐,不足的填充指定的字符
  'lower',    
  'lstrip',
  'partition',   # 按照制定的分割符号分隔str,返回分割符号前,分割符号,分割符号后
@@ -663,17 +774,18 @@ Python 中的集合是指无序的、不重复的
 >>> set(a)
 set([1, 2, 3, 4])
 
->>> a=set('abcd')
->>> b=set('defg')
-# 交集
->>> a & b
-set(['d'])
-# 并集
->>> a | b
-set(['a', 'c', 'b', 'e', 'd', 'g', 'f'])
-# 差集
->>> a - b
-set(['a', 'c', 'b'])
+>>> a = set('abracadabra')
+>>> b = set('alacazam')
+>>> a                                  # unique letters in a
+set(['a', 'r', 'b', 'c', 'd'])
+>>> a - b                              # letters in a but not in b
+set(['r', 'd', 'b'])
+>>> a | b                              # letters in either a or b
+set(['a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'])
+>>> a & b                              # letters in both a and b
+set(['a', 'c'])
+>>> a ^ b                              # letters in a or b but not both
+set(['r', 'd', 'b', 'm', 'z', 'l'])
 </pre>
 
 ### 数据类型转换
@@ -708,9 +820,10 @@ max(x[,...]) 返回序列中最大的元素
 ## 流程控制
 
 
-python 中的 for 语句相当于 java 中的 foreach 语句,它用于从集合对象(list/str/tuple等)中遍历数据
+python中的for语句相当于java中的foreach语句,它用于从集合对象(list/str/tuple等)中遍历数据
 
 python中没有switch...case语句,只能用if...elif...else语句表达
+
 python中也没有do...while
 
 
@@ -755,9 +868,9 @@ b = 5
 </pre>
 
 * 参数
-可变长度的参数
-星号此操作符是将参数作为元组传递给函数
-双星号是将参数作为字典传递给函数
+可变长度的参数  
+星号操作符是将参数作为元组传递给函数  
+双星号是将参数作为字典传递给函数  
 
 <pre class=brush:python>
 #!/usr/bin/env python
@@ -799,10 +912,10 @@ exec()函数, 用来执行储存在字符串中python语句
 execfile()函数, 用来执行一个外部的py文件  
 
 <pre class=brush:python>
->>> str=’1+2’
+>>> str="1+2"
 >>> print eval(str)
 
->>> exec ‘a=100’
+>>> exec "a=100"
 print a
 
 >>> execfile(r’/tmp/a.py’)
