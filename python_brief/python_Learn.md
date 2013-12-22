@@ -1,15 +1,82 @@
-# 文章参考
+# Python学习笔记
+
+## 1. 文章参考
+
 * Python 新员工教材(楚广明 2012)
 * Python基础教程（第2版）
 
-# Python 概述
+## 2. Python 概述
+
 1. Python 使用强制缩进的编码风格,并以此组织代码块
 2. Python 语句结尾不用分号
-3. Python 标明注释用#(单行)或三引号(多行)(注:三引号实际上是定义字符串的,再此起到注释作用)
+3. Python 标明注释用#(单行)或三引号(多行)(注:三引号实际上是定义字符串的, 也可以起到注释作用)
 4. Python 语言没有入口方法(main),代码会从头到尾顺序执行
 5. Python 用 import 引用所需要的模块
+    * import math
+    * from math import sqrt
+    * from math import sqrt as a
 
-# 基本数据类型
+
+## 3. 版本选择
+
+### 3.1 Python 2 OR Python3 ?
+
+官网的一句话: https://wiki.python.org/moin/Python2orPython3
+>Short version: Python 2.x is legacy, Python 3.x is the present and future of the language
+
+
+### 3.2 Jython OR IronPython ?
+
+Python有多个发行版本可以选择，如:
+
+* 官方Python
+* ActivePython
+* Stackless Python
+* Jython
+* IronPython
+
+其中，官方python, ActivePython, Stackless Python都是基于C语言编写的。
+
+ActivePython的内核与适用于Windows版本的标准python相同，最大区别在于它包含了许多额外独立的可用的工具(模块)， 如果你正在使用windows的话，ActivePython绝对值得一试。
+
+Stackless Python是python版本的重新实现版本，基于原始的代码，但也包含了一些重要的内部改动。最大的优点就是允许深层次的递归并且多线程执行更加高效。
+
+Jython利用java实现，运行在Java虚拟机中， 而IcronPython则是利用C#实现，运行于公共语言运行时(Common Language Runtime), 这个就是.NET的“java虚拟机”。
+
+## 4. Python Shell (ipython && bpython)
+
+* 写一些简单的调试代码
+* 查看帮助信息(help, dir, type,  print module.\_\_file\_\_)
+* 强大的计算器
+    除法有坑：
+    默认情况下是执行整数除法
+
+    <pre class=brush:python>
+    >>> 1 / 2
+    0
+    </pre>
+
+    如果希望执行普通除法的话, 有如下方法解决:
+
+    * 将参与数除法的两个数中的一个转变为浮点数
+
+    <pre class=brush:python>
+    >>> 1.0 / 2
+    0.5
+    </pre>
+
+    * from __future__ import division (python中的时光机)
+
+    <pre class=brush:python>
+    >>> from __future__ import division
+    >>> 1 / 2
+    0.5
+    </pre>
+
+    * 运行python时, 使用命令行开关-Qnew
+
+
+## 5. 基本数据类型
 
 >一切数据是对象,一切命名是引用
 
@@ -77,9 +144,9 @@ const._ConstTypeError: Can't rebind const magic
 </pre>
 
 
-## 常见的数据类型
+### 5.1 常见的数据类型
 
-### 空类型
+#### 空类型
 
 空类型(None)表示该值是一个空对象,比如没有明确定义返回值的函数就是返回None。
 空类型没有任何属性,经常被用做函数中可选参数的默认值. None的布尔值为假。
@@ -87,13 +154,13 @@ const._ConstTypeError: Can't rebind const magic
 #### 布尔类型
 
 Python 中用 True 和 False 来定义真假
-在Python中,None, 任何数值类型中的0, 空字符串'', 空元组(), 空列表[], 空字典{}都被当作False, 其他对象均为True.
+在Python中,None, 任何数值类型中的0, 空字符串, 空元组, 空列表, 空字典都被当作False, 其他对象均为True.
 
 #### 数值类型
 
 Python拥有四种数值类型: 整型(int)、长整型(long)、浮点类型(float)以及复数类型(complex)。
 这些类型是不可变的，就是说整数对象一旦创建，其值便不可更改.  
-相反，系统将创建新的简单类型对象并将其赋值给变量。通过 Python id 函数，可以查看基本 PyObject 标识的变更方式,另外str类型同样是不可变的。
+相反，系统将创建新的简单类型对象并将其赋值给变量。通过 Python id 函数，可以查看基本PyObject 标识的变更方式,另外str类型同样是不可变的。
 
 <pre class=brush:python>
 >>> i = 100 
@@ -102,6 +169,17 @@ Python拥有四种数值类型: 整型(int)、长整型(long)、浮点类型(flo
 >>> i = 101
 >>> id(i)
 8403296
+</pre>
+
+python语言的整型相当于C语言中的long, 在32位机器上的范围是 -2^31 ~ 2^31 - 1, 查看本机int的最大值sys.maxint
+
+十六进制和八进制的表示方法
+
+<pre class=brush:python>
+>>> 0xF
+15
+>>> 010
+8
 </pre>
 
 #### 列表(list)
@@ -128,7 +206,7 @@ Python包含7种内建的序列：列表，元组，字符串，Unicode字符串
 * 切片
 
 <pre class=brush:python>
-# 分片操作是需要提供两个索引作边界的，第一个索引的元素是包含在分片内，第二个不包含
+# 分片操作是需要提供两个索引作边界的，第一个索引的元素是包含在分片内，第二个不包含(左闭右开)
 >>> a='hello,world'
 >>> a[2:6]
 'llo,'
@@ -266,7 +344,6 @@ remove(x) 删除表匹配对象 x 的第一个元素,无匹配时异常
 reverse() 颠倒列表元素的顺序  
 
 sort() 对列表排序 
-
 
 
 上面append， extend， insert， remove，reverse，sort都是直接修改原来的列表，而不是返回一个新的列表
@@ -491,7 +568,26 @@ TypeError: reduce() of empty sequence with no initial value
 >>> reduce(add, [],9)
 9
 </pre>
+
+
 #### 元组(tuple)
+
+元祖和序列最大的区别是： 序列可以修改，元祖则不能。
+
+元祖在只有一个值时，逗号也必须有:
+
+<pre class=brush:python>
+>>> a=(2)
+>>> a
+2
+>>> b=(2,)
+>>> b
+(2,)
+>>> print type(a)
+<type 'int'>
+>>> print type(b)
+<type 'tuple'>
+</pre>
 
 元组除了创建和访问元组元素之外，没有什么其他的操作
 
@@ -530,6 +626,7 @@ TypeError: reduce() of empty sequence with no initial value
  'count',
  'index']
 </pre>
+
 
 
 #### 字符串
