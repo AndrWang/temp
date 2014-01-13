@@ -1,4 +1,6 @@
-## 导入示例数据库
+### 导入示例数据库
+
+```sql
 
 mysql> create database demo;
 Query OK, 1 row affected (0.08 sec)
@@ -23,5 +25,4 @@ mysql> show tables;
 
 mysql> source populate.sql
 
-
-
+```

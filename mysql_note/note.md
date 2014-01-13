@@ -1,4 +1,4 @@
-# Mysql信息查看
+## mysql信息查看
 
 * 显示表列
 	
@@ -8,21 +8,30 @@ mysql> desc table_name
 
 * 显示服务器的状态信息
 
+```sql
 mysql> show status
+```
 
 * 显示创建特定数据库或表的语句
 
+
+```sql
 mysql> show create database database_name;
 mysql> show create table table_name;
+```
 
 * 显示服务器的错误和警告信息
 
+```sql
 mysql> show errors
 mysql> show warnings
+```
 
 * 更多关于show命令的
 
+```sql
 mysql> help show
+```
 
 
 ## 查询数据
@@ -32,6 +41,7 @@ mysql> help show
 注意： 不能部分使用DISTINCT， DISTINCT关键字作用于所有列而不仅是它的前置列，如果给出
 SELECT DISTINCT vend_id, prod_price，除非制定的两个列都不同，否则所有的行都将被查询出来
 
+```sql
 mysql> select distinct vend_id, prod_price from products;
 +---------+------------+
 | vend_id | prod_price |
@@ -50,10 +60,13 @@ mysql> select distinct vend_id, prod_price from products;
 |    1003 |       4.49 |
 +---------+------------+
 12 rows in set (0.04 sec)
+```
 
 * LIMIT,限制输出结果
 
 只返回5条结果
+
+```sql
 mysql> select prod_name from products limit 5;
 +--------------+
 | prod_name    |
@@ -65,12 +78,16 @@ mysql> select prod_name from products limit 5;
 | Bird seed    |
 +--------------+
 5 rows in set (0.00 sec)
+```
 
 从行3开始（注意: 第一行是行0, 这里即相当与从第4行开始），返回5条结果
+
+```sql
 mysql> select prod_name from products limit 3, 5;
 
 上面的语句等价于
 mysql> select prod_name from products limit 5, 3;
+```
 
 
 ## 给查询结果排序
@@ -82,6 +99,7 @@ mysql> select prod_name from products limit 5, 3;
 
 * msyql过滤时默认是不区分大小写的
 
+```sql
 mysql> select prod_name from products where prod_name = 'safe';
 +-----------+
 | prod_name |
@@ -89,10 +107,13 @@ mysql> select prod_name from products where prod_name = 'safe';
 | Safe      |
 +-----------+
 1 row in set (0.00 sec)
+```
 
 * BETWEEN
 
  查询价格在5～10美元之间的产品
+
+```sql
  mysql> select prod_name, prod_price from products where prod_price between 5 and 10;
 +----------------+------------+
 | prod_name      | prod_price |
@@ -104,10 +125,13 @@ mysql> select prod_name from products where prod_name = 'safe';
 | TNT (5 sticks) |      10.00 |
 +----------------+------------+
 5 rows in set (0.00 sec)
+```
 
 * NULL, 无值，它与字段包含0, 空字符或仅仅包含空格**不同**
 
 在查询某些不具有特定行的值的时候，你可能希望返回具有NULL的值，但是不行，因为未知具有特殊含义，数据库不知道他们是否匹配。
+
+```sql
 mysql> select cust_id, cust_email from customers;
 +---------+---------------------+
 | cust_id | cust_email          |
@@ -127,9 +151,9 @@ mysql> select cust_id, cust_email from customers where cust_email != 'ylee@coyot
 |   10003 | rabbit@wascally.com |
 |   10004 | sam@yosemite.com    |
 +---------+---------------------+
+```
 
 从上面的例子可以看出，NULL行并没有被返回。
 
 因此，在过滤数据时，一定要验证返回的数据中确实给出了被过滤列具有NULL的行。
-
 
