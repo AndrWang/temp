@@ -2,9 +2,13 @@
 
 * 显示表列
 	
+```sql
 mysql> show columns from table_name
-等价于
+
+# 等价于
+
 mysql> desc table_name
+```
 
 * 显示服务器的状态信息
 
@@ -85,7 +89,7 @@ mysql> select prod_name from products limit 5;
 ```sql
 mysql> select prod_name from products limit 3, 5;
 
-上面的语句等价于
+# 上面的语句等价于
 mysql> select prod_name from products limit 5, 3;
 ```
 
